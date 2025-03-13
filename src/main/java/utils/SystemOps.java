@@ -1,5 +1,7 @@
 package utils;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,7 +78,7 @@ public class SystemOps {
     }
 
     public static void generateServiceFile() {
-        String serviceFile = """
+        String serviceFileContents = """
                 [Unit]
                 Description=Edge Update Service
                 After=network.target
@@ -87,18 +89,18 @@ public class SystemOps {
                 
                 [Install]
                 WantedBy=default.target""";
-        ProcessBuilder pb = new ProcessBuilder("echo", "-e", serviceFile, ">", "/etc/systemd/system/edge-update.service");
-        pb.inheritIO();
+        File serviceFile = new File("/etc/systemd/system/edge-update.service");
+        if (serviceFile.exists()) {
+            System.out.println("Service file already exists.");
+            return;
+        }
         try {
-            Process process = pb.start();
-            int exitCode = process.waitFor();
-            if (exitCode == 0) {
-                System.out.println("Service file generated.");
-                System.out.println("Reloading the daemon...");
-                reloadDaemon();
-                System.out.println("Enabling the service...");
-                enableService();
-            }
+            Files.writeString(serviceFile.toPath(), serviceFileContents);
+            System.out.println("Service file generated.");
+            System.out.println("Reloading the daemon...");
+            reloadDaemon();
+            System.out.println("Enabling the service...");
+            enableService();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }

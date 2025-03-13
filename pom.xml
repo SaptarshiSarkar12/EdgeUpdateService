@@ -25,7 +25,7 @@
                         <version>0.10.5</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <imageName>EUS</imageName>
+                            <imageName>eus</imageName>
                             <mainClass>main.EdgeUpdateService</mainClass>
                             <buildArgs>
                                 <buildArg>--enable-url-protocols=https</buildArg>
