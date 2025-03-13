@@ -81,7 +81,8 @@ public class SystemOps {
         String serviceFileContents = """
                 [Unit]
                 Description=Edge Update Service
-                After=network.target
+                Requires=network-online.target
+                After=network-online.target user@.service
                 
                 [Service]
                 ExecStart=/usr/bin/eus
