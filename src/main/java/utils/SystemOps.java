@@ -74,4 +74,61 @@ public class SystemOps {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
+    public static void generateServiceFile() {
+        String serviceFile = """
+                [Unit]
+                Description=Edge Update Service
+                After=network.target
+                
+                [Service]
+                ExecStart=/usr/bin/eus
+                Restart=on-failure
+                
+                [Install]
+                WantedBy=default.target""";
+        ProcessBuilder pb = new ProcessBuilder("echo", "-e", serviceFile, ">", "/etc/systemd/system/edge-update.service");
+        pb.inheritIO();
+        try {
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Service file generated.");
+                System.out.println("Reloading the daemon...");
+                reloadDaemon();
+                System.out.println("Enabling the service...");
+                enableService();
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static void reloadDaemon() {
+        ProcessBuilder pb = new ProcessBuilder("sudo", "systemctl", "daemon-reload");
+        pb.inheritIO();
+        try {
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Daemon reloaded.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static void enableService() {
+        ProcessBuilder pb = new ProcessBuilder("sudo", "systemctl", "enable", "edge-update.service");
+        pb.inheritIO();
+        try {
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Service enabled.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 }
