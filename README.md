@@ -9,6 +9,11 @@ Currently, it works only for beta versions of Edge (installed via debian package
 > This service does not ask you to accept the terms and conditions of Microsoft Edge. It is your responsibility to accept the terms and conditions.
 > It only upgrades the Edge browser to the latest version and requires you to have Edge installed on your machine.
 
+## Purpose of this project
+
+Currently, Microsoft does not provide automatic updates to any channels of MS Edge and it is a hectic task for some to do it manually.
+This led to the need of this tool to automate the process. As I am a **MS Edge Beta** user, so it currently supports updates to MS Edge **Beta**.
+
 ## Installation
 
 1. Download the `eus` executable from the [release page](https://github.com/SaptarshiSarkar12/EdgeUpdateService/releases/latest) and put the binary in `/usr/bin` directory.
