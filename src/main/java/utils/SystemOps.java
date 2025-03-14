@@ -11,7 +11,7 @@ public class SystemOps {
     private SystemOps() {}
 
     public static String getCurrentEdgeVersion() {
-        ProcessBuilder pb = new ProcessBuilder("microsoft-edge", "--version");
+        ProcessBuilder pb = new ProcessBuilder("/usr/bin/microsoft-edge", "--version");
         try {
             Process process = pb.start();
             int exitCode = process.waitFor();
@@ -35,7 +35,7 @@ public class SystemOps {
     }
 
     public static void downloadEdgePackage(String pkgLink) {
-        ProcessBuilder pb = new ProcessBuilder("wget", "--progress=bar:force", "--no-check-certificate", pkgLink, "-P", "/tmp/");
+        ProcessBuilder pb = new ProcessBuilder("/usr/bin/wget", "--progress=bar:force", "--no-check-certificate", pkgLink, "-P", "/tmp/");
         pb.inheritIO();
         try {
             Process process = pb.start();
@@ -50,7 +50,7 @@ public class SystemOps {
 
     public static void installEdgePackage(String pkgName) {
         latestPkg = pkgName;
-        ProcessBuilder pb = new ProcessBuilder("sudo", "apt", "install", "/tmp/" + pkgName);
+        ProcessBuilder pb = new ProcessBuilder("/usr/bin/sudo", "apt", "install", "/tmp/" + pkgName);
         pb.inheritIO();
         try {
             Process process = pb.start();
