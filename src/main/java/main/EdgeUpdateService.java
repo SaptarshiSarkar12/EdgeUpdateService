@@ -4,6 +4,7 @@ import utils.CheckUpdate;
 import utils.SystemOps;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EdgeUpdateService {
     public final static String VERSION = "1.0.0";
