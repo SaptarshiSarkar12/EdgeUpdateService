@@ -38,9 +38,9 @@ public class EdgeUpdateService {
         if (!requiredDeps.isEmpty()) {
             System.out.print("Critical dependencies missing: Install ");
             if (requiredDeps.size() == 1) {
-                System.out.println(requiredDeps.get(0) + " before running the service.");
+                System.out.println(requiredDeps.getFirst() + " before running the service.");
             } else {
-                System.out.println(String.join(", ", requiredDeps.subList(0, requiredDeps.size() - 1)) + " and " + requiredDeps.get(requiredDeps.size() - 1) + " before running the service.");
+                System.out.println(String.join(", ", requiredDeps.subList(0, requiredDeps.size() - 1)) + " and " + requiredDeps.getLast() + " before running the service.");
             }
         }
     }
