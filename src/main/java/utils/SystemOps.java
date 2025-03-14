@@ -108,7 +108,7 @@ public class SystemOps {
     }
 
     private static void reloadDaemon() {
-        ProcessBuilder pb = new ProcessBuilder("sudo", "systemctl", "daemon-reload");
+        ProcessBuilder pb = new ProcessBuilder("/usr/bin/sudo", "systemctl", "daemon-reload");
         pb.inheritIO();
         try {
             Process process = pb.start();
@@ -122,7 +122,7 @@ public class SystemOps {
     }
 
     private static void enableService() {
-        ProcessBuilder pb = new ProcessBuilder("sudo", "systemctl", "enable", "edge-update.service");
+        ProcessBuilder pb = new ProcessBuilder("/usr/bin/sudo", "systemctl", "enable", "edge-update.service");
         pb.inheritIO();
         try {
             Process process = pb.start();
@@ -136,7 +136,7 @@ public class SystemOps {
     }
 
     public static void selfUninstall() {
-        ProcessBuilder pb = new ProcessBuilder("sudo", "systemctl", "disable", "edge-update.service");
+        ProcessBuilder pb = new ProcessBuilder("/usr/bin/sudo", "systemctl", "disable", "edge-update.service");
         pb.inheritIO();
         try {
             Process process = pb.start();
