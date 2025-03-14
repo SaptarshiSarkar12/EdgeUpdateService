@@ -1,0 +1,84 @@
+name: Build and Release
+
+on:
+  push:
+    paths-ignore:
+      - "**/*.md"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release'
+        required: true
+        type: string
+  pull_request:
+    paths-ignore:
+      - "**/*.md"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build EdgeUpdateService
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Set up GraalVM JDK 23
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '23'
+          distribution: 'graalvm'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          set-java-home: true
+          cache: 'maven'
+      - name: Build EUS binary
+        run: |
+          mvn clean install
+          mvn -P build-binary package
+      - name: Make EUS binary executable
+        run: |
+          chmod +x target/eus
+      - name: Tar EUS binary
+        run: |
+          tar -cvf eus.tar target/eus
+      - name: Upload EUS binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: eus-binary
+          path: eus.tar
+
+    release:
+      name: Release EdgeUpdateService (EUS) binary
+      runs-on: ubuntu-latest
+      needs: build
+      steps:
+        - name: Download EUS binary
+          uses: actions/download-artifact@v4
+          with:
+              name: eus-binary
+        - name: Extract EUS binary
+          run: |
+            tar -xvf eus.tar
+        - name: Generate Artifact Summary
+          run: |
+            if ${{ github.event_name == 'workflow_dispatch' }}; then
+                echo "# EUS v${{ inputs.version }} Built!" >> $GITHUB_STEP_SUMMARY
+            else
+                echo "# EUS built for \`${{ github.ref }}\`" >> $GITHUB_STEP_SUMMARY
+            fi
+            echo "## EUS Binary Details" >> $GITHUB_STEP_SUMMARY
+            echo "- **SHA256**: $(sha256sum target/eus | cut -d' ' -f1)" >> $GITHUB_STEP_SUMMARY
+            echo "- **Size**: $(du -h target/eus | cut -f1)" >> $GITHUB_STEP_SUMMARY
+        - name: Create Release
+          if: ${{ github.repository == 'SaptarshiSarkar12/EdgeUpdateService' && github.event_name == 'workflow_dispatch' && github.ref_name == 'main' }}
+          run: |
+            echo "Creating release for version ${{ inputs.version }}"
+            gh release create v${{ inputs.version }} target/eus --title "EUS v${{ inputs.version }}" --generate-notes
+            echo "Release created for version ${{ inputs.version }}"
+            echo "## Released [EUS v${{ inputs.version }}](https://github.com/SaptarshiSarkar12/EdegeUpdateService/releases/tag/v${{ inputs.version }}) successfully :rocket:!" >> $GITHUB_STEP_SUMMARY
+          env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

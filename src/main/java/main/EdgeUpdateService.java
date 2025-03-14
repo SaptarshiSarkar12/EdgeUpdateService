@@ -9,6 +9,10 @@ public class EdgeUpdateService {
             for (String arg : args) {
                 if (arg.equals("--generate-service") || arg.equals("-gs")) {
                     utils.SystemOps.generateServiceFile();
+                } else if (arg.equals("--uninstall-eus") || arg.equals("-u")) {
+                    utils.SystemOps.selfUninstall();
+                } else {
+                    System.out.println("Invalid argument: " + arg);
                 }
             }
         } else {

@@ -134,4 +134,28 @@ public class SystemOps {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
+    public static void selfUninstall() {
+        ProcessBuilder pb = new ProcessBuilder("sudo", "systemctl", "disable", "edge-update.service");
+        pb.inheritIO();
+        try {
+            Process process = pb.start();
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Service disabled.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        File serviceFile = new File("/etc/systemd/system/edge-update.service");
+        if (serviceFile.exists()) {
+            try {
+                Files.delete(serviceFile.toPath());
+                System.out.println("Service file deleted.");
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+        System.out.println("Self-uninstall completed. Please remove the binary file manually from \"/usr/bin/eus\"");
+    }
 }
