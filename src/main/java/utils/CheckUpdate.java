@@ -32,12 +32,19 @@ public class CheckUpdate {
     }
 
     public static int compareVersions(String v1, String v2) {
-        int[] version1 = Arrays.stream(v1.split("\\."))
-                .mapToInt(Integer::parseInt)
-                .toArray();
-        int[] version2 = Arrays.stream(v2.split("\\."))
-                .mapToInt(Integer::parseInt)
-                .toArray();
+        int[] version1;
+        int[] version2;
+        try {
+            version1 = Arrays.stream(v1.split("\\."))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+            version2 = Arrays.stream(v2.split("\\."))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid version format: " + e.getMessage());
+            return -1; // Indicate comparison failure
+        }
 
         for (int i = 0; i < Math.max(version1.length, version2.length); i++) {
             int num1 = i < version1.length ? version1[i] : 0;
