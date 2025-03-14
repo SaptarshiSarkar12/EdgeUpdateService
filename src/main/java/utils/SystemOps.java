@@ -165,7 +165,7 @@ public class SystemOps {
     private static String getCommandPath(String command) {
         String path = "/usr/bin/" + command; // Common default path on .deb systems
         try {
-            ProcessBuilder pb = new ProcessBuilder("which", command);
+            ProcessBuilder pb = new ProcessBuilder("/usr/bin/which", command);
             Process process = pb.start();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String foundPath = reader.readLine();
@@ -181,7 +181,7 @@ public class SystemOps {
 
     public static boolean isCommandAvailable(String command) {
         try {
-            ProcessBuilder pb = new ProcessBuilder("which", command);
+            ProcessBuilder pb = new ProcessBuilder("/usr/bin/which", command);
             Process process = pb.start();
             return process.waitFor() == 0;
         } catch (IOException | InterruptedException e) {
