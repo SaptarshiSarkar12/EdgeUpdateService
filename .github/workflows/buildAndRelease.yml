@@ -21,6 +21,9 @@ concurrency:
 jobs:
   build:
     name: Build EdgeUpdateService
+    permissions:
+      contents: read    # Required for checkout
+      actions: write    # Required for uploading artifacts
     runs-on: ubuntu-latest
 
     steps:
@@ -53,6 +56,9 @@ jobs:
 
   release:
     name: Release EdgeUpdateService (EUS) binary
+    permissions:
+      contents: write   # Required for release creation
+      actions: read     # Required for downloading artifacts
     runs-on: ubuntu-latest
     needs: build
     steps:
