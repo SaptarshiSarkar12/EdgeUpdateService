@@ -64,7 +64,7 @@ public class SystemOps {
     }
 
     public static void cleanup() {
-        ProcessBuilder pb = new ProcessBuilder("rm", "/tmp/" + latestPkg);
+        ProcessBuilder pb = new ProcessBuilder("/bin/rm", "/tmp/" + latestPkg);
         pb.inheritIO();
         try {
             Process process = pb.start();
