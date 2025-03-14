@@ -17,6 +17,14 @@ Currently, it works only for beta versions of Edge (installed via debian package
 
 ## Usage
 
+Available commands:
+- `eus [ --help | -h ]`: Display help.
+- `eus [ --version | -v ]`: Display version.
+- `eus [ --uninstall-eus | -u ]`: Uninstall everything related to EUS excluding the binary which you need to remove manually. This command requires admin permissions (`sudo`).
+- `eus [ --generate-service | -gs ]`: Installs and enables the EUS service. This command requires admin permissions (`sudo`).
+- `eus` (with no arguments): Check for Edge updates and install if available. This command also require admin permissions (`sudo`).
+
+For EUS service, below are some examples how
 - To manually start the service, run `sudo systemctl start edge-update.service`.
 - To stop the service, run `sudo systemctl stop edge-update.service`.
 - To disable the service, run `sudo systemctl disable edge-update.service`.
