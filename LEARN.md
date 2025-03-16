@@ -2,8 +2,8 @@
 
 ## The Story
 
-I am Saptarshi, an Ubuntu (AMD64) and Microsoft Edge (Beta) user. I use Edge for browsing, watching videos, and reading articles. I have been using Edge for a long time now.
-Microsoft does not provide any support for auto-updating linux deb packages. As I am a student, updating edge manually takes too much time. I have to download the deb package from the official website, install it, and then remove the old version. This is a very time-consuming process. I wanted to automate this process. So, I decided to create a systemd-service that will automatically check and update Edge Beta on my Ubuntu system.
+I am an **Ubuntu (_AMD64_)** and **Microsoft Edge (_Beta_)** user. I use Edge for browsing, watching videos, and reading articles. I have been using Edge for a long time now.
+Microsoft Edge is a great browser but Microsoft does not provide any support for auto-updating itself. As I am a student, updating edge manually takes too much time. I have to download the deb package from the official website, install it, and then remove the old version. This is a very time-consuming process. I wanted to automate this process. So, I decided to create a systemd-service that will automatically check and update Edge Beta on my Ubuntu system.
 
 ## The Plan
 
@@ -12,10 +12,11 @@ A systemd-service will be generated, installed, and enabled on the system, on th
 
 ## The Implementation
 
-I will use Java to create the program. The program will use the Java network class to check for updates and `ProcessBuilder` for running shell commands.
+I will use Java to create the program which will use the Java network classes to check for updates and `ProcessBuilder` for running shell commands.
 The current Edge (currently only for `Beta` channel) version can be retrieved by executing the command `microsoft-edge-beta --version`.
 The program will use the `wget` command to download the deb package and `apt` (with `dpkg`) to install the package.
 The systemd-service will be generated in `/etc/systemd/system/` (so that it can run with `sudo` privileges) and will be enabled using `systemctl`.
+I have utilized [GraalVM](https://graalvm.org/) to generate a self-contained executable that runs independently without requiring a Java runtime environment.
 
 ## The Outcome
 
