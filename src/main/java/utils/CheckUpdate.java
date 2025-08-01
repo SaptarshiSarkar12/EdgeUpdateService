@@ -1,5 +1,8 @@
 package utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -7,6 +10,7 @@ import java.util.Objects;
 public class CheckUpdate {
     private static final String version = utils.SystemOps.getCurrentEdgeVersion();
     private static final List<String> packages = utils.FetchPackages.getPackages();
+    private static String channel = detectChannel(); // Detect and set the channel
 
     public CheckUpdate() {
         System.out.println("Check Update");
@@ -55,6 +59,54 @@ public class CheckUpdate {
         } catch (NumberFormatException e) {
             System.out.println("Error while parsing integer: " + e.getMessage());
             return 0;
+        }
+    }
+
+    public static String detectChannel() {
+        String detectedChannel = "stable"; // Default to stable
+
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("microsoft-edge", "--version");
+            Process process = processBuilder.start();
+
+            try (BufferedReader reader = new BufferReader(new InputStreamReader(process.getInputStream())));
+            String line; 
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("beta")) {
+                    detectedChannel = "beta";
+                    break;
+                } else if (line.contains("dev")) {
+                    detectedChannel = "dev";
+                    break;
+                } else if (line.contains("canary")) {
+                    detectedChannel = "canary";
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error detecting channel: " + e.getMessage());
+            // Fallback check for insider executables
+            detectedChannel = checkInsiderExecutables();
+        }
+
+        return detectedChannel;
+    }
+
+    private static String checkInsiderExecutables() {
+        List<String> insiders = List.of("microsoft-edge-beta", "microsoft-edge-dev", "microsoft-edge-canary");
+        for (String exe : insiders) {
+            try {
+                ProcessBuilder pb = new ProcessBuilder(exe, "--version");
+                Process process = pb.start();
+                if (process.waitFor() == 0) {
+                    if (exe.contains("beta")) return "beta";
+                    if (exe.contains("dev")) return "dev";
+                    if (exe.contains("canary")) return "canary";
+                }
+            } catch (IOException | InterruptedException ignored) {
+            }
+
+            return "stable";
         }
     }
 }

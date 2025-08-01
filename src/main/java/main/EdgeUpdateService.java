@@ -26,6 +26,10 @@ public class EdgeUpdateService {
                 }
             }
         } else {
+            // Detect installed edge channel (stable, beta, dev, canary)
+            String detectedChannel = CheckUpdate.detectChannel();
+            utils.FetchPackages.setChannel(detectedChannel);
+
             updateEdge();
         }
     }
