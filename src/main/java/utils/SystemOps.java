@@ -4,37 +4,41 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.Buffer;
 import java.nio.file.Files;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SystemOps {
-    private static String latestPkg;
+    // private static String latestPkg;
 
     private SystemOps() {}
 
     public static String getCurrentEdgeVersion() {
-        ProcessBuilder pb = new ProcessBuilder(getCommandPath("microsoft-edge-beta"), "--version");
         try {
-            Process process = pb.start();
-            int exitCode = process.waitFor();
-            if (exitCode == 0) {
-                String v = new String(process.getInputStream().readAllBytes()).trim();
-                String regex = "Edge\\s(\\d+\\.\\d+\\.\\d+\\.\\d+)";
-                Pattern pattern = Pattern.compile(regex);
-                Matcher matcher = pattern.matcher(v);
+            ProcessBuilder processBuilder = new ProcessBuilder("microsoft-edge", "--version");
+            Process process = processBuilder.start();
 
-                if (matcher.find()) {
-                    return matcher.group(1);
-                } else {
-                    System.out.println("No version found in the input string.");
-                    return null;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line; 
+                if ((line = reader.readLine()) != null) {
+                    return extractVersion(line);
                 }
             }
-        } catch (Exception e) {
-            System.out.println("Error while getting current Edge version: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Error fetching current Edge version: " + e.getMessage());
         }
-        return null;
+
+        return "0.0.0.0"; // Default if version cannot be fetched
+    }
+
+    private static String extractVersion(String versionString) {
+        String[] parts = versionString.split(" ");
+        if (parts.length > 1) {
+            return parts[1];
+        }
+
+        return "0.0.0.0";
     }
 
     public static void downloadEdgePackage(String pkgLink) {
