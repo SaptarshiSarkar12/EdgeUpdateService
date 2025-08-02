@@ -22,7 +22,7 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-                        <version>0.10.6</version>
+                        <version>0.11.0</version>
                         <extensions>true</extensions>
                         <configuration>
                             <imageName>eus</imageName>
@@ -56,7 +56,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.5.0</version>
+                        <version>3.5.1</version>
                         <executions>
                             <execution>
                                 <id>java-agent</id>
