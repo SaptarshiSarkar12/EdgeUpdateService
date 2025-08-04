@@ -8,6 +8,7 @@ import java.util.List;
 
 public class FetchPackages {
     private static String channel = "beta"; // Default if not overridden
+    private static final String pkgLink = "https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-" + channel + "/";
 
     private FetchPackages() {}
 

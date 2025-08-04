@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SystemOps {
-    // private static String latestPkg;
+    private static String latestPkg;
 
     private SystemOps() {}
 
