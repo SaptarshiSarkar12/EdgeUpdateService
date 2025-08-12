@@ -63,27 +63,27 @@ public class CheckUpdate {
     }
 
     public static String detectInstalledChannel() {
-    try {
-        ProcessBuilder pb = new ProcessBuilder("microsoft-edge", "--version");
-        Process process = pb.start();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        String output = reader.readLine();
-        if (output != null) {
-            output = output.toLowerCase();
-            if (output.contains("beta")) return "beta";
-            if (output.contains("dev")) return "dev";
-            if (output.contains("canary")) return "canary";
-            return "stable"; // default if none found
+        try {
+            ProcessBuilder pb = new ProcessBuilder("microsoft-edge", "--version");
+            Process process = pb.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String output = reader.readLine();
+            if (output != null) {
+                output = output.toLowerCase();
+                if (output.contains("beta")) return "beta";
+                if (output.contains("dev")) return "dev";
+                if (output.contains("canary")) return "canary";
+                return "stable"; // default if none found
+            }
+        } catch (IOException e) {
+            // Fallback: check for insider builds
+            if (SystemOps.isCommandAvailable("microsoft-edge-beta")) return "beta";
+            if (SystemOps.isCommandAvailable("microsoft-edge-dev")) return "dev";
+            if (SystemOps.isCommandAvailable("microsoft-edge-canary")) return "canary";
         }
-    } catch (IOException e) {
-        // Fallback: check for insider builds
-        if (SystemOps.isCommandAvailable("microsoft-edge-beta")) return "beta";
-        if (SystemOps.isCommandAvailable("microsoft-edge-dev")) return "dev";
-        if (SystemOps.isCommandAvailable("microsoft-edge-canary")) return "canary";
+        // If everything fails
+        return null;
     }
-    // If everything fails
-    return null;
-}
 
 
     private static String checkInsiderExecutables() {
