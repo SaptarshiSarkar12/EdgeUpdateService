@@ -85,24 +85,4 @@ public class CheckUpdate {
         return null;
     }
 
-
-    private static String checkInsiderExecutables() {
-    List<String> insiders = List.of("microsoft-edge-beta", "microsoft-edge-dev", "microsoft-edge-canary");
-    for (String exe : insiders) {
-        try {
-            ProcessBuilder pb = new ProcessBuilder(exe, "--version");
-            Process process = pb.start();
-            if (process.waitFor() == 0) {
-                if (exe.contains("beta")) return "beta";
-                if (exe.contains("dev")) return "dev";
-                if (exe.contains("canary")) return "canary";
-            }
-        } catch (IOException | InterruptedException ignored) {
-            // Do nothing, just try the next executable
-        }
-    }
-    // If none of the insider builds are found, default to stable
-    return "stable";
-}
-
 }
