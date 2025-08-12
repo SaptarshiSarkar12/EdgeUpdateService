@@ -16,7 +16,7 @@ public class SystemOps {
 
     public static String getCurrentEdgeVersion() {
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder("microsoft-edge", "--version");
+            ProcessBuilder processBuilder = new ProcessBuilder("/usr/bin/microsoft-edge", "--version");
             Process process = processBuilder.start();
 
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
