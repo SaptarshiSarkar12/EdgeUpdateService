@@ -64,7 +64,7 @@ public class CheckUpdate {
 
     public static String detectInstalledChannel() {
         try {
-            ProcessBuilder pb = new ProcessBuilder("microsoft-edge", "--version");
+            ProcessBuilder pb = new ProcessBuilder("/usr/bin/microsoft-edge", "--version");
             Process process = pb.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String output = reader.readLine();
@@ -77,9 +77,9 @@ public class CheckUpdate {
             }
         } catch (IOException e) {
             // Fallback: check for insider builds
-            if (SystemOps.isCommandAvailable("microsoft-edge-beta")) return "beta";
-            if (SystemOps.isCommandAvailable("microsoft-edge-dev")) return "dev";
-            if (SystemOps.isCommandAvailable("microsoft-edge-canary")) return "canary";
+            if (SystemOps.isCommandAvailable("/usr/bin/microsoft-edge-beta")) return "beta";
+            if (SystemOps.isCommandAvailable("/usr/bin/microsoft-edge-dev")) return "dev";
+            if (SystemOps.isCommandAvailable("/usr/bin/microsoft-edge-canary")) return "canary";
         }
         // If everything fails
         return null;
