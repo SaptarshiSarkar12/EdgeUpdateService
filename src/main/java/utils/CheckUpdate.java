@@ -63,10 +63,13 @@ public class CheckUpdate {
     }
 
     public static String detectInstalledChannel() {
-        try {
-            ProcessBuilder pb = new ProcessBuilder("/usr/bin/microsoft-edge", "--version");
-            Process process = pb.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+    try {
+        ProcessBuilder pb = new ProcessBuilder("microsoft-edge", "--version");
+        Process process = pb.start();
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(process.getInputStream()))) {
+
             String output = reader.readLine();
             if (output != null) {
                 output = output.toLowerCase();
@@ -75,14 +78,16 @@ public class CheckUpdate {
                 if (output.contains("canary")) return "canary";
                 return "stable"; // default if none found
             }
-        } catch (IOException e) {
-            // Fallback: check for insider builds
-            if (SystemOps.isCommandAvailable("/usr/bin/microsoft-edge-beta")) return "beta";
-            if (SystemOps.isCommandAvailable("/usr/bin/microsoft-edge-dev")) return "dev";
-            if (SystemOps.isCommandAvailable("/usr/bin/microsoft-edge-canary")) return "canary";
         }
-        // If everything fails
-        return null;
+    } catch (IOException e) {
+        // Fallback: check for insider builds
+        if (SystemOps.isCommandAvailable("microsoft-edge-beta")) return "beta";
+        if (SystemOps.isCommandAvailable("microsoft-edge-dev")) return "dev";
+        if (SystemOps.isCommandAvailable("microsoft-edge-canary")) return "canary";
     }
+    // If everything fails
+    return null;
+}
+
 
 }
