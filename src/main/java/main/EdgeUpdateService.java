@@ -26,17 +26,19 @@ public class EdgeUpdateService {
                 }
             }
         } else {
-            // Detect installed edge channel (stable, beta, dev, canary)
             String detectedChannel = CheckUpdate.detectInstalledChannel();
             utils.FetchPackages.setChannel(detectedChannel);
 
-            updateEdge();
+            updateEdge(detectedChannel);
         }
     }
 
     private static void checkInitDeps() {
+        String detectedChannel = CheckUpdate.detectInstalledChannel();
+        String edgeBinary = getEdgeBinaryName(detectedChannel);
+
         ArrayList<String> requiredDeps = new ArrayList<>(List.of(
-            "microsoft-edge-beta", "wget", "apt", "dpkg", "systemctl", "rm", "sudo"
+            edgeBinary, "wget", "apt", "dpkg", "systemctl", "rm", "sudo"
         ));
         requiredDeps.removeIf(SystemOps::isCommandAvailable);
         if (!requiredDeps.isEmpty()) {
@@ -49,21 +51,34 @@ public class EdgeUpdateService {
         }
     }
 
-    public static void updateEdge() {
+    public static void updateEdge(String channel) {
         String latestPkg = CheckUpdate.getLatestPkgName();
         if (latestPkg == null) {
             System.out.println("No Edge update available.");
         } else {
+            String pkgPath = getEdgeBinaryName(channel);
+
             System.out.println("Latest Package: " + latestPkg);
             System.out.println("New Edge update is available.");
             System.out.println("Downloading the latest package...");
-            utils.SystemOps.downloadEdgePackage("https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-beta/" + latestPkg);
+
+            utils.SystemOps.downloadEdgePackage(
+                "https://packages.microsoft.com/repos/edge/pool/main/m/" + pkgPath + "/" + latestPkg
+            );
+
             System.out.println("Installing the latest package...\nPlease close all Edge windows.");
             utils.SystemOps.installEdgePackage(latestPkg);
             System.out.println("Cleaning up...");
             utils.SystemOps.cleanup();
             System.out.println("Update completed.");
         }
+    }
+
+    private static String getEdgeBinaryName(String channel) {
+        if ("beta".equals(channel)) return "microsoft-edge-beta";
+        if ("dev".equals(channel)) return "microsoft-edge-dev";
+        if ("canary".equals(channel)) return "microsoft-edge-canary";
+        return "microsoft-edge"; // default to stable
     }
 
     public static void printHelp() {
