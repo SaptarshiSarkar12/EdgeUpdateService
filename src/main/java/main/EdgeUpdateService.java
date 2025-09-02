@@ -26,8 +26,13 @@ public class EdgeUpdateService {
                 }
             }
         } else {
+// File: src/main/java/main/EdgeUpdateService.java
             String detectedChannel = CheckUpdate.detectInstalledChannel();
+            if (detectedChannel == null) {
+                detectedChannel = "stable";
+            }
             utils.FetchPackages.setChannel(detectedChannel);
+            System.out.println("Detected channel: " + detectedChannel);
 
             updateEdge(detectedChannel);
         }
