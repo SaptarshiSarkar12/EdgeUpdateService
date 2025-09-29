@@ -10,7 +10,6 @@ import java.util.Objects;
 public class CheckUpdate {
     private static final String version = utils.SystemOps.getCurrentEdgeVersion();
     private static final List<String> packages = utils.FetchPackages.getPackages();
-    private static String channel = detectInstalledChannel(); // Detect and set the channel
 
     public CheckUpdate() {
         System.out.println("Check Update");
