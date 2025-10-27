@@ -49,7 +49,7 @@ jobs:
         run: |
           tar -cvf eus.tar target/eus
       - name: Upload EUS binary
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: eus-binary
           path: eus.tar
