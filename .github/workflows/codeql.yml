@@ -42,7 +42,7 @@ jobs:
           build-mode: none
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Setup JDK 23
       if: ${{ matrix.language == 'java-kotlin' }}
