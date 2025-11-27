@@ -7,10 +7,19 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 public class FetchPackages {
-    private static final String channel = "beta";
+    private static String channel = "beta"; // Default if not overridden
     private static final String pkgLink = "https://packages.microsoft.com/repos/edge/pool/main/m/microsoft-edge-" + channel + "/";
 
     private FetchPackages() {}
+
+    // Set detected channel dynamically
+    public static void setChannel(String newChannel) {
+        if (List.of("stable", "beta", "dev", "canary").contains(newChannel)) {
+            channel = newChannel;
+        } else {
+            System.out.println("Invalid channel. Using default: beta.");
+        }
+    }
 
     private static String getResponse() {
         try (HttpClient client = HttpClient.newHttpClient()) {
